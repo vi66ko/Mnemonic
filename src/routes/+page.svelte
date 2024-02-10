@@ -4,6 +4,9 @@
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
 
 	export let data;
+	export let form;
+
+	$: console.log(form);
 	console.log(data);
 </script>
 
@@ -22,6 +25,15 @@
 			<button>Намери</button>
 		</div>
 	</form>
+	<div>
+		{#if form?.success}
+			<ul>
+				{#each form?.data as word}
+					<li>{word}</li>
+				{/each}
+			</ul>
+		{/if}
+	</div>
 </section>
 
 <style>
