@@ -5,13 +5,16 @@
 	let index = 0;
 	let numberRangeStart = 0;
 	let numberRangeEnd = 9;
-	let numberOfDigits = 0;
+	let numberOfDigits = '';
 	let generatedSequence = [];
 	let correctAnswers = [];
 	let answer = null;
-	let isSettingStartDigit = false;
+	let isSettingStartDigit = false; // Option to toggle start by default is 0
 	let message = '';
+	let practiceMore = false;
+
 	$: displayCorrectAnswers = correctAnswers.join('');
+
 	const State = {
 		IS: 'generating',
 		IDLE: 'idle',
@@ -32,7 +35,8 @@
 		generatedSequence = [];
 
 		if (numberOfDigits <= 0) {
-			setMessage('The number of digits must not be 0', 4);
+			setMessage('The number of digits must not be 0 or empty ', 4);
+			setMessage('The number of digits must not be empty or 0', 4);
 			return;
 		}
 
@@ -59,7 +63,11 @@
 			correctAnswers = [...correctAnswers, answer];
 
 			console.log('Bravo');
-			if (!generatedSequence[index]) {
+
+			if (generatedSequence[index] === undefined) {
+				generatedSequence = [];
+				correctAnswers = [];
+				index = 0;
 				State.IS = State.GENERATING;
 			}
 		} else {
@@ -70,7 +78,17 @@
 	}
 </script>
 
-<div>
+<!-- Only for debugging purpose -->
+<!-- <div class="text-white">
+	<h2>Debugging</h2>
+	<ul class="mt-4">
+		<li>index: {index}</li>
+		<li>generatedSequence: {generatedSequence}</li>
+		<li>correctAnswers: {correctAnswers}</li>
+	</ul>
+</div> -->
+<!--  // End Debugging -->
+<div class="relative">
 	<div class="h-10 py-1 border-b tracking-wider text-center text-white">{message}</div>
 	{#if State.IS === State.GENERATING}
 		<section id="config-menu">
@@ -84,7 +102,7 @@
 				</div>
 				<div class="range">
 					<label for="">Digit Length: </label>
-					<input type="number" bind:value={numberOfDigits} />
+					<input type="number" bind:value={numberOfDigits} placeholder="0" />
 				</div>
 			</div>
 			<div class="controls">
@@ -121,6 +139,17 @@
 			</div>
 		</section>
 	{/if}
+	<div class="modal absolute inset-0" class:hidden={!practiceMore}>
+		<div class="controls h-full flex justify-center content-center flex-wrap">
+			<button
+				class="rounded"
+				on:click={() => {
+					practiceMore = false;
+					State.IS = State.GENERATING;
+				}}>Practice more</button
+			>
+		</div>
+	</div>
 </div>
 
 <style>
@@ -148,7 +177,7 @@
 		text-align: center;
 	}
 	.controls {
-		background: rgb(64, 99, 12);
+		color: snow;
 	}
 
 	button {
@@ -181,5 +210,12 @@
 	/* Firefox */
 	input[type='number'] {
 		-moz-appearance: textfield;
+	}
+
+	.modal {
+		background-color: rgba(0, 0, 0, 0.812);
+	}
+	.modal button {
+		background: rgb(64, 99, 12);
 	}
 </style>

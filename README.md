@@ -1,3 +1,3 @@
 # Mnemonic
 
-A simple app to practice and improve the mnemonic technique
+A simple app to practice and improve the mnemonic techniques
