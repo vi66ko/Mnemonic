@@ -11,7 +11,7 @@
 	let answer = null;
 	let isSettingStartDigit = false; // Option to toggle start by default is 0
 	let message = '';
-	let practiceMore = false;
+	let practiceMore = true;
 
 	$: displayCorrectAnswers = correctAnswers.join('');
 
@@ -65,6 +65,7 @@
 			console.log('Bravo');
 
 			if (generatedSequence[index] === undefined) {
+				practiceMore = false;
 				generatedSequence = [];
 				correctAnswers = [];
 				index = 0;
@@ -79,12 +80,13 @@
 </script>
 
 <!-- Only for debugging purpose -->
-<!-- <div class="text-white">
+<!-- <div class="py-5 text-white">
 	<h2>Debugging</h2>
 	<ul class="mt-4">
 		<li>index: {index}</li>
 		<li>generatedSequence: {generatedSequence}</li>
 		<li>correctAnswers: {correctAnswers}</li>
+		<li>practiceMore: {practiceMore}</li>
 	</ul>
 </div> -->
 <!--  // End Debugging -->
@@ -139,12 +141,16 @@
 			</div>
 		</section>
 	{/if}
-	<div class="modal absolute inset-0" class:hidden={!practiceMore}>
+	<!-- SO STRANGE The class is applied when the value is false -->
+	<div class="modal absolute inset-0 text-stone-300 text-center" class:hidden={practiceMore}>
+		<div class="pt-10">
+			<p class="text-2xl">Well DONE</p>
+		</div>
 		<div class="controls h-full flex justify-center content-center flex-wrap">
 			<button
 				class="rounded"
 				on:click={() => {
-					practiceMore = false;
+					practiceMore = true;
 					State.IS = State.GENERATING;
 				}}>Practice more</button
 			>
@@ -178,6 +184,9 @@
 	}
 	.controls {
 		color: snow;
+	}
+	.controls > button {
+		background: rgb(64, 99, 12);
 	}
 
 	button {
@@ -213,7 +222,7 @@
 	}
 
 	.modal {
-		background-color: rgba(0, 0, 0, 0.812);
+		background-color: rgba(0, 0, 0, 0.871);
 	}
 	.modal button {
 		background: rgb(64, 99, 12);
